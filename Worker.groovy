@@ -29,9 +29,9 @@ abstract class Worker {
 	
 	Scene scene
 	
-    PGroup group
+	PGroup group
 	
-    def dataSource
+	def dataSource
 	
 	Sql sql
 	
