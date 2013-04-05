@@ -4,8 +4,8 @@ import xy.pars.message.*
 
 
 class ForkerProcessor extends Processor {
-    
-    protected List<Processor> forkSuccessors
+	
+	protected List<Processor> forkSuccessors
   
 	void setForkSuccessors(List<Processor> forkSuccessors){
 		this.forkSuccessors=forkSuccessors
@@ -13,12 +13,12 @@ class ForkerProcessor extends Processor {
 			it.previous << this
 		}
 	}
-    
-    def beforeInit(){
-	}
 	
+	def beforeInit(){
+	}
+
 	Result process(Task task){
-		
+
 		forkSuccessors?.each{ successor ->
 			def successorQueue=successor.tasksQueue
 			while(successorQueue.length() >= Processor.MAX_QUEUE_LENGTH){
@@ -26,14 +26,14 @@ class ForkerProcessor extends Processor {
 			}
 			successorQueue << task
 		}
-		
+
 		return null
 	}
-	
+
 	def onCompleted(){
 		def completedMessage=new Completed(sender:this)
 		forkSuccessors?.each { it << completedMessage }
 		super.onCompleted()
 	}
-	
+
 }
