@@ -1,0 +1,39 @@
+package xy.pars
+
+
+class CombinedProcessor extends Processor {
+  
+	def processors
+	
+	protected procSize
+	
+	CombinedProcessor(def processors){
+		this.processors=processors
+	}
+	
+	protected beforeInit(){
+		processors*.beforeInit()
+	}
+	
+	protected afterInit(){
+		processors*.afterInit()
+		procSize=processors.size()
+	}
+	
+	def onCompleted(){
+		processors*.onCompleted()
+	}
+	
+	Result process(Task task){
+		Result result=null
+		for(int i=0;i<procSize;i++){
+			result=processors[i].process(task)
+			if(result!=null){
+				if(result == Result.FILTER_OUT || result instanceof ExceptionResult){
+					return result
+				}
+			}
+		}
+		return result
+	}
+}
